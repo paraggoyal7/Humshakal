@@ -9,7 +9,8 @@ const App = () => {
 	// console.log(d1.points());
 	return (
 		// <UploadFile />
-		<AppDropDrag />
+		// <AppDropDrag />
+		<CytoscapeTest />
 	)
 }
 

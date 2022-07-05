@@ -1,21 +1,21 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import Cytoscape from 'cytoscape';
 import CytoscapeComponent from 'react-cytoscapejs';
-import {mockNodes} from "./MockData/mockNodes";
+import { mockNodes } from "./MockData/mockNodes";
 import cola from 'cytoscape-cola';
 import fcose from 'cytoscape-fcose';
 
-Cytoscape.use( fcose );
+Cytoscape.use(fcose);
 
-Cytoscape.use( cola );
+Cytoscape.use(cola);
 
-export default function CytoscapeTest(){
+export default function CytoscapeTest() {
   const [cy, setCy] = useState(null)
   const [selectedLayout, setSelectedLayout] = useState(0);
   const [selectedNode, setSelectedNode] = useState();
 
   useEffect(() => {
-    if(!!selectedNode){
+    if (!!selectedNode) {
       console.log("Degree", selectedNode.degree());
     }
   }, [selectedNode])
@@ -25,32 +25,32 @@ export default function CytoscapeTest(){
   const calculateCachedCentrality = () => {
     let nodes = cy.nodes();
 
-    if( nodes.length > 0 && nodes[0].data('centrality') == null ){
+    if (nodes.length > 0 && nodes[0].data('centrality') == null) {
       let centrality = cy.elements().closenessCentralityNormalized();
 
-      nodes.forEach( n => n.data( 'centrality', centrality.closeness(n) ) );
+      nodes.forEach(n => n.data('centrality', centrality.closeness(n)));
     }
   };
 
-  let concentric = function( node ){
-    if(!cy){
+  let concentric = function (node) {
+    if (!cy) {
       return 0
     }
     calculateCachedCentrality();
 
     return node.data('centrality');
   };
-  let levelWidth = function( nodes ){
-    if(!cy){
+  let levelWidth = function (nodes) {
+    if (!cy) {
       return 0
     }
     calculateCachedCentrality();
 
-    let min = nodes.min( n => n.data('centrality') ).value;
-    let max = nodes.max( n => n.data('centrality') ).value;
+    let min = nodes.min(n => n.data('centrality')).value;
+    let max = nodes.max(n => n.data('centrality')).value;
 
 
-    return ( max - min ) / 5;
+    return (max - min) / 5;
   };
 
 
@@ -68,7 +68,7 @@ export default function CytoscapeTest(){
   // }
 
   const layout = {
-    name: 'grid',
+    name: 'concentric',
     animate: true,
     animationDuration: 2000,
     fit: true,
@@ -101,27 +101,27 @@ export default function CytoscapeTest(){
 
   const layout2 = {
     name: 'fcose',
-    animate: true, 
+    animate: true,
     animationDuration: 2000,
     packComponents: true,
     numIter: 10000,
   }
 
   const mockElements = mockNodes.map((item, idx) => ([
-    { data: { id: item["#node1"], name: item["#node1"], label: item.node1_string_id, score: idx%5 + 1, gene: true}},
-    { data: { id: item["node2"], name: item["node2"], label: item.node2_string_id, score: idx%5 + 1, gene: true }},
-    { data: { source: item["#node1"], target: item["node2"], label: `Edge from ${item.node1_string_id} to ${item.node2_string_id}`, weight: idx%5 + 1 } }
+    { data: { id: item["#node1"], name: item["#node1"], label: item.node1_string_id, score: idx % 5 + 1, gene: true } },
+    { data: { id: item["node2"], name: item["node2"], label: item.node2_string_id, score: idx % 5 + 1, gene: true } },
+    { data: { source: item["#node1"], target: item["node2"], label: `Edge from ${item.node1_string_id} to ${item.node2_string_id}`, weight: idx % 5 + 1 } }
   ])).flat()
 
-  const stylesheet=[
+  const stylesheet = [
     {
       selector: 'node',
       style: {
-        width: (ele) => { return ele._private.data.r * 10},
-        height: (ele) => { return ele._private.data.r * 10},
+        width: (ele) => { return ele._private.data.r * 10 },
+        height: (ele) => { return ele._private.data.r * 10 },
         "background-color": "green",
       },
-      label: (ele) => { return ele._private.data.name},
+      label: (ele) => { return ele._private.data.name },
       highlighted: {
         "border-width": "6px",
         "border-color": "#333333",
@@ -136,7 +136,7 @@ export default function CytoscapeTest(){
     {
       selector: 'edge',
       style: {
-        width: (ele) => {return ele._private.data.w*2},
+        width: (ele) => { return ele._private.data.w * 2 },
       },
       opacity: 0.5,
       highlighted: {
@@ -144,7 +144,7 @@ export default function CytoscapeTest(){
         "width": "9px",
       }
     },
-    
+
   ]
 
   const stylesheet2 = [
@@ -370,12 +370,12 @@ export default function CytoscapeTest(){
         "line-color": "#AAD8FF",
         "width": "10px"
       }
-    }  
+    }
   ]
 
   console.log(cy, selectedLayout);
 
-  
+
 
   const handleLayoutChange = () => {
     let computedLayout = cy.layout(selectedLayout === 1 ? layout2 : layout)
@@ -384,35 +384,40 @@ export default function CytoscapeTest(){
     console.log("Max Degree", cy.nodes().maxDegree());
   }
 
-  if(!!cy){
-    cy.on('tap', function(evt){
+  if (!!cy) {
+    cy.on('tap', function (evt) {
       const node = evt.target;
       console.log("evt", node);
-      if (node === cy){
+      if (node === cy) {
         setSelectedNode(null)
       }
-      else{
-        console.log( 'tapped ' + node.id() + "  " + node.degree() );
+      else {
+        console.log('tapped ' + node.id() + "  " + node.degree());
         setSelectedNode(node);
       }
-    }); 
+    });
   }
 
   return (
-    <div style={ { width: '800px', height: '800px', backgroundColor: "grey", margin: "100px auto 0px auto" } }>
-      <CytoscapeComponent
-        elements={mockElements}
-        style={ { width: '800px', height: '800px' } }
-        layout={layout}
-        stylesheet={stylesheet2}
-        minZoom={0.1}
-        maxZoom={5}
-        cy={(cy) => { setCy(cy) }}
+    <>
+      <div style={{ width: '800px', height: '800px', backgroundColor: "grey", margin: "100px auto 0px auto" }}>
+        <CytoscapeComponent
+          elements={mockElements}
+          style={{ width: '800px', height: '800px' }}
+          layout={layout}
+          stylesheet={stylesheet2}
+          minZoom={0.1}
+          maxZoom={5}
+          cy={(cy) => { setCy(cy) }}
         />
-        <button onClick={handleLayoutChange} style={{ margin: "8px"}}>Change Layout</button>
+        <button onClick={handleLayoutChange} style={{ margin: "8px" }}>Change Layout</button>
         {!!selectedNode && (
-          <div style = {{display: "inline", margin: "8px"}}>Degree: {selectedNode.degree()}</div>
+          <div style={{ display: "inline", margin: "8px" }}>Degree: {selectedNode.degree()}</div>
         )}
-    </div>
+      </div>
+      <div style={{ position: "absolute", top: "50%", left: "40%", color: "red" }}>
+        <h1>Hi Anuja!</h1>
+      </div>
+    </>
   );
 }
