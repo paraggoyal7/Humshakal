@@ -415,9 +415,6 @@ export default function CytoscapeTest() {
           <div style={{ display: "inline", margin: "8px" }}>Degree: {selectedNode.degree()}</div>
         )}
       </div>
-      <div style={{ position: "absolute", top: "50%", left: "40%", color: "red" }}>
-        <h1>Hi Anuja!</h1>
-      </div>
     </>
   );
 }
