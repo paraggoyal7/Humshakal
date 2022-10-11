@@ -15,10 +15,10 @@ export default function CytoscapeTest() {
   const [selectedLayout, setSelectedLayout] = useState(0);
   const [selectedNode, setSelectedNode] = useState();
 
-  // useEffect(() => {
-  //   console.log("looging page view");
-  //   ReactGA.pageview(window.location.pathname);
-  // }, [])
+  useEffect(() => {
+    console.log("looging page view");
+    window["logEvent"]("pageView", { path: window.location.hostname + window.location.search });
+  }, [])
 
   useEffect(() => {
     if (!!selectedNode) {
@@ -384,11 +384,12 @@ export default function CytoscapeTest() {
 
 
   const handleLayoutChange = () => {
-    // console.log("logging button click");
+    console.log("logging button click");
     // ReactGA.event({
     //   category: 'Click',
     //   action: 'Changed Layout'
     // });
+    window["logEvent"]("click", { name: "Change Layout" })
     let computedLayout = cy.layout(selectedLayout === 1 ? layout2 : layout)
     computedLayout.run()
     setSelectedLayout((prev) => prev === 1 ? 0 : 1)
