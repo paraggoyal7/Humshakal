@@ -2,7 +2,7 @@ import React from 'react';
 import UploadFile from "./UploadFile"
 import CytoscapeTest from "./CytoscapeTest"
 import AppDropDrag from "./AppDropDrag"
-import ReactGA from 'react-ga';
+import ReactGA from 'react-ga4';
 //import 'fast-kde';
 // eslint-disable-next-line
 const App = () => {

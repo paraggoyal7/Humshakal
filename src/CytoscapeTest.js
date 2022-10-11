@@ -4,7 +4,7 @@ import CytoscapeComponent from 'react-cytoscapejs';
 import { mockNodes } from "./MockData/mockNodes";
 import cola from 'cytoscape-cola';
 import fcose from 'cytoscape-fcose';
-import ReactGA from "react-ga"
+import ReactGA from "react-ga4";
 
 Cytoscape.use(fcose);
 
@@ -383,6 +383,10 @@ export default function CytoscapeTest() {
 
 
   const handleLayoutChange = () => {
+    ReactGA.event({
+      category: 'Click',
+      action: 'Changed Layout'
+    });
     let computedLayout = cy.layout(selectedLayout === 1 ? layout2 : layout)
     computedLayout.run()
     setSelectedLayout((prev) => prev === 1 ? 0 : 1)
