@@ -4,6 +4,7 @@ import CytoscapeComponent from 'react-cytoscapejs';
 import { mockNodes } from "./MockData/mockNodes";
 import cola from 'cytoscape-cola';
 import fcose from 'cytoscape-fcose';
+import ReactGA from "react-ga"
 
 Cytoscape.use(fcose);
 
@@ -13,6 +14,10 @@ export default function CytoscapeTest() {
   const [cy, setCy] = useState(null)
   const [selectedLayout, setSelectedLayout] = useState(0);
   const [selectedNode, setSelectedNode] = useState();
+
+  useEffect(() => {
+    ReactGA.pageview(window.location.pathname);
+  }, [])
 
   useEffect(() => {
     if (!!selectedNode) {
