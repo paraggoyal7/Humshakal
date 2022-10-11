@@ -4,7 +4,7 @@ import CytoscapeComponent from 'react-cytoscapejs';
 import { mockNodes } from "./MockData/mockNodes";
 import cola from 'cytoscape-cola';
 import fcose from 'cytoscape-fcose';
-import ReactGA from "react-ga4";
+import ReactGA from "react-ga";
 
 Cytoscape.use(fcose);
 
@@ -15,7 +15,14 @@ export default function CytoscapeTest() {
   const [selectedLayout, setSelectedLayout] = useState(0);
   const [selectedNode, setSelectedNode] = useState();
 
+  ReactGA.initialize("UA-244870936-1", {
+    gaOptions: {
+      siteSpeedSampleRate: 100,
+    },
+  });
+
   useEffect(() => {
+    console.log("looging page view");
     ReactGA.pageview(window.location.pathname);
   }, [])
 
@@ -378,11 +385,12 @@ export default function CytoscapeTest() {
     }
   ]
 
-  console.log(cy, selectedLayout);
+  // console.log(cy, selectedLayout);
 
 
 
   const handleLayoutChange = () => {
+    console.log("logging button click");
     ReactGA.event({
       category: 'Click',
       action: 'Changed Layout'
